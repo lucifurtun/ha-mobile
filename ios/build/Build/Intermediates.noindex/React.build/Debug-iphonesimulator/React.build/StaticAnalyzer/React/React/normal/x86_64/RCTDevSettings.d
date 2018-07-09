@@ -1,0 +1,23 @@
+dependencies: \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Modules/RCTDevSettings.mm \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Modules/RCTDevSettings.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTBridge.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTBridgeDelegate.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTJavaScriptLoader.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTDefines.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTBridgeModule.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTFrameUpdate.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTInvalidating.h \
+  /Users/lucifurtun/work/personal/ha-mobile/ios/build/Build/Products/Debug-iphonesimulator/include/jschelpers/JavaScriptCore.h \
+  /Users/lucifurtun/work/personal/ha-mobile/ios/build/Build/Products/Debug-iphonesimulator/include/jschelpers/JSCWrapper.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTBridge+Private.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTEventDispatcher.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Modules/RCTJSCSamplingProfiler.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTLog.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTAssert.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Base/RCTUtils.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/DevSupport/RCTPackagerClient.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Profiler/RCTProfile.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/DevSupport/RCTPackagerConnection.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/DevSupport/RCTInspectorDevServerHelper.h \
+  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/Inspector/RCTInspectorPackagerConnection.h
