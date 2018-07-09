@@ -1,3 +1,0 @@
-dependencies: \
-  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/ReactCommon/jschelpers/systemJSCWrapper.cpp \
-  /Users/lucifurtun/work/personal/ha-mobile/node_modules/react-native/React/../ReactCommon/jschelpers/JSCWrapper.h
