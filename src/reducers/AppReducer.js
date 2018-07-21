@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
-import {devices} from '.'
+import {devices, locations} from '.'
 
 const AppReducer = combineReducers({
-    devices: devices.devicesReducer
+    devices: devices.devicesReducer,
+    locations: locations.reducer
 })
 
 export default AppReducer

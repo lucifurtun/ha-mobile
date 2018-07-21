@@ -9,7 +9,7 @@ const myStorage = {
     getItem: (key) => myStorage[key],
     removeItem: (key) => {
         delete myStorage[key]
-    },
+    }
 }
 
 const client = new Client({ uri: 'ws://127.0.0.1:1884/', clientId: 'clientId', storage: myStorage })

@@ -1,7 +1,6 @@
-import { takeEvery, put } from 'redux-saga/effects'
+import { takeEvery } from 'redux-saga/effects'
 import { client } from '../mqtt'
 import { Message } from 'react-native-paho-mqtt'
-// import { store } from './store'
 
 
 export const SWITCH_ON = 'SWITCH_ON'

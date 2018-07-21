@@ -1,25 +1,34 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Client, Message } from 'react-native-paho-mqtt'
-import { Provider } from 'react-redux'
+import {Provider} from 'react-redux'
 
-import { createDrawerNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation'
-import { PersistGate } from 'redux-persist/integration/react'
+import {createDrawerNavigator, createStackNavigator, createSwitchNavigator} from 'react-navigation'
+import {PersistGate} from 'redux-persist/integration/react'
 
 import Devices from './src/screens/Devices'
+import Locations from './src/screens/Locations'
 import SideMenu from './src/components/SideMenu'
-import { persistor, store } from './src/store'
-import { client, runMQTT } from './src/mqtt'
+import {persistor, store} from './src/store'
+import {client, runMQTT} from './src/mqtt'
 import MenuButton from './src/components/MenuButton'
-import { SWITCHED_OFF, SWITCHED_ON } from './src/reducers/devices'
+import {SWITCHED_OFF, SWITCHED_ON} from './src/reducers/devices'
+
+
+console.disableYellowBox = true
 
 
 const HaNavigator = createStackNavigator({
     devices: {
         screen: Devices,
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({navigation}) => ({
             title: 'Devices',
-            headerLeft: <MenuButton callback={ navigation.toggleDrawer }/>
+            headerLeft: <MenuButton callback={navigation.toggleDrawer}/>
+        })
+    },
+    locations: {
+        screen: Locations,
+        navigationOptions: ({navigation}) => ({
+            title: 'Locations',
+            headerLeft: <MenuButton callback={navigation.toggleDrawer}/>
         })
     },
 }, {
@@ -51,11 +60,11 @@ client.on('messageReceived', (message) => {
     console.log(data)
 
     if (data.event === SWITCHED_ON) {
-        store.dispatch({ type: SWITCHED_ON, payload: { id: data.id } })
+        store.dispatch({type: SWITCHED_ON, payload: {id: data.id}})
     }
 
     if (data.event === SWITCHED_OFF) {
-        store.dispatch({ type: SWITCHED_OFF, payload: { id: data.id } })
+        store.dispatch({type: SWITCHED_OFF, payload: {id: data.id}})
     }
 })
 
@@ -66,8 +75,8 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Provider store={ store }>
-                <PersistGate loading={ null } persistor={ persistor }>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
                     <AppNavigator/>
                 </PersistGate>
             </Provider>

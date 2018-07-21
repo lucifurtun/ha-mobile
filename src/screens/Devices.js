@@ -1,32 +1,31 @@
 import React from 'react'
-import { StyleSheet, Text, View, Switch, ListView } from 'react-native'
-import { Client, Message } from 'react-native-paho-mqtt'
-import { connect } from 'react-redux'
-import { switchOn, switchOff, SWITCHED_OFF, SWITCHED_ON } from '../reducers/devices'
+import {StyleSheet, Text, View, Switch, ListView} from 'react-native'
+import {connect} from 'react-redux'
+import {switchOn, switchOff} from '../reducers/devices'
 
 class Devices extends React.Component {
     render() {
         return (
-            <View style={ styles.container }>
+            <View style={styles.container}>
                 <ListView
-                    dataSource={ this.props.dataSource }
-                    renderRow={ (rowData) => (
-                        <View style={{flexDirection: 'row', alignItems: 'center' , marginTop: 10}}>
-                            <Text style={{marginRight: 10}}>{ rowData.name }</Text>
+                    dataSource={this.props.dataSource}
+                    renderRow={(rowData) => (
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
+                            <Text style={{marginRight: 10}}>{rowData.name}</Text>
                             <Switch
-                                onValueChange={ (value) => {
+                                onValueChange={(value) => {
                                     if (value) {
                                         this.props.switchOn(rowData.id)
                                     }
                                     else {
                                         this.props.switchOff(rowData.id)
                                     }
-                                } }
-                                value={ rowData.state }
+                                }}
+                                value={rowData.state}
                                 size={30}
                             />
                         </View>
-                    ) }
+                    )}
                 />
 
             </View>
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 
 function mapStateToProps(state) {
     return {
