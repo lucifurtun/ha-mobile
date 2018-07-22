@@ -2,7 +2,6 @@ import React from 'react'
 import {StyleSheet, Text, View, Switch, FlatList} from 'react-native'
 import {connect} from 'react-redux'
 import {switchOn, switchOff} from '../reducers/devices'
-import {values} from 'lodash'
 import {graphql} from "react-apollo"
 import {gql} from "apollo-boost"
 
@@ -13,7 +12,7 @@ class Devices extends React.Component {
             <View style={styles.container}>
                 <FlatList
                     useFlatList
-                    data={values(this.props.data.devices)}
+                    data={this.props.data.devices}
                     keyExtractor={(item, index) => item.id.toString()}
                     renderItem={(data, rowMap) => (
                         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
