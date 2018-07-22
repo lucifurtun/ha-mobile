@@ -3,17 +3,19 @@ import {StyleSheet, Text, View, ListView, TouchableOpacity} from 'react-native'
 import {connect} from 'react-redux'
 import {SwipeListView} from "react-native-swipe-list-view"
 import {values} from 'lodash'
+import {gql} from "apollo-boost"
+import { graphql } from 'react-apollo';
 
-class Devices extends React.Component {
+
+class Locations extends React.Component {
     render() {
+        console.log(this.props)
         return (
             <SwipeListView
                 useFlatList
-                data={this.props.dataSource}
+                data={this.props.data.locations}
                 disableRightSwipe
                 renderItem={(data, rowMap) => {
-                    console.log(data)
-                    console.log(rowMap)
 
                     return (
                         <TouchableOpacity style={styles.listItem}>
@@ -22,6 +24,7 @@ class Devices extends React.Component {
 
                     )
                 }}
+                keyExtractor={(item, index) => item.id.toString()}
                 renderHiddenItem={(data, secId, rowId, rowMap) => (
                     <View style={styles.rowBack}>
                         <TouchableOpacity
@@ -110,10 +113,17 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        devices: state.devices,
-        dataSource: values(state.locations),
+        locations: values(state.locations),
     }
 }
 
+const dataQuery = graphql(gql`
+query{
+  locations{
+    name,
+    id
+  }
+}`)
 
-export default connect(mapStateToProps)(Devices)
+
+export default dataQuery(connect(mapStateToProps)(Locations))
