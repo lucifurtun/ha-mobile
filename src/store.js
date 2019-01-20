@@ -1,12 +1,11 @@
-import AppReducer from "./reducers/AppReducer"
-import {applyMiddleware, createStore} from 'redux'
-import {persistStore, persistReducer} from 'redux-persist'
+import AppReducer from './reducers/AppReducer'
+import { applyMiddleware, createStore } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
-import {fork, all} from 'redux-saga/effects'
-import {AsyncStorage} from 'react-native'
-import {map, reduce, compact, has} from 'lodash'
+import { fork, all } from 'redux-saga/effects'
+import { AsyncStorage } from 'react-native'
+import { map, compact } from 'lodash'
 import * as reduxModules from './reducers'
-
 
 
 const persistConfig = {
@@ -21,7 +20,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 
 export const store = createStore(
-    persistedReducer,
+    AppReducer,
     applyMiddleware(sagaMiddleware)
 )
 

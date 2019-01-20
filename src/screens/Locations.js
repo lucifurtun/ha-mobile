@@ -9,7 +9,6 @@ import { graphql } from 'react-apollo';
 
 class Locations extends React.Component {
     render() {
-        console.log(this.props)
         return (
             <SwipeListView
                 useFlatList

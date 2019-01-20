@@ -1,5 +1,6 @@
 import { Client, Message } from 'react-native-paho-mqtt'
 import { SWITCHED_OFF, SWITCHED_ON } from './reducers/devices'
+import { MQTT_URL } from './settings'
 // import { store } from './store'
 
 const myStorage = {
@@ -12,7 +13,7 @@ const myStorage = {
     }
 }
 
-const client = new Client({ uri: 'ws://127.0.0.1:1884/', clientId: 'clientId', storage: myStorage })
+const client = new Client({ uri: MQTT_URL, clientId: 'clientId', storage: myStorage })
 
 client.on('connectionLost', (responseObject) => {
     if (responseObject.errorCode !== 0) {
@@ -26,7 +27,7 @@ const runMQTT = () => {
         .then(() => {
             // Once a connection has been made, make a subscription and send a message.
             console.log('onConnect')
-            return client.subscribe('devices/power')
+            return client.subscribe('devices/#')
         })
         .then(() => {
             const message = new Message('Hello')

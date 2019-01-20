@@ -2,73 +2,92 @@ import { takeEvery } from 'redux-saga/effects'
 import { client } from '../mqtt'
 import { Message } from 'react-native-paho-mqtt'
 
-
 export const SWITCH_ON = 'SWITCH_ON'
 export const SWITCHED_ON = 'SWITCHED_ON'
 
 export const SWITCH_OFF = 'SWITCH_OFF'
 export const SWITCHED_OFF = 'SWITCHED_OFF'
 
+export const devicesReducer = (state = {}, action, rootState) => {
+    switch(action.type) {
+        case 'UPDATE_DEVICES':
+            let initialState = {}
 
-const initialState = {
-    1: { id: 1, name: 'Light1', state: false },
-    2: { id: 2, name: 'Light2', state: false }
-}
+            for (let device of action.payload) {
+                switch(device.access) {
+                    case 'SENSOR':
+                        if (device.type === 'TEMPERATURE') {
+                            initialState[device.id] = {
+                                value: { t: 0, h: 0 }
+                            }
+                        }
+                        break
+                    case 'SWITCH':
+                        initialState[device.id] = {
+                            value: false
+                        }
+                        break
+                }
+            }
 
-export const devicesReducer = (state = initialState, action, rootState) => {
-    switch (action.type) {
-        case SWITCH_ON:
-            console.log('switch on', action.payload.id)
+            return initialState
+
+        case 'GET_TEMPERATURE':
             return state
-        case SWITCHED_ON:
-            console.log('switched on', action.payload.id)
-            console.log(action.payload)
+        case 'STATUS_TEMPERATURE':
             return {
                 ...state,
                 [action.payload.id]: {
                     ...state[action.payload.id],
-                    state: true
+                    value: action.payload.value
                 }
             }
-        case SWITCH_OFF:
-            console.log('switch off', action.payload.id)
-            return state
-        case SWITCHED_OFF:
-            console.log('switched off', action.payload.id)
+        case 'STATUS_SWITCH':
             return {
                 ...state,
                 [action.payload.id]: {
                     ...state[action.payload.id],
-                    state: false
+                    value: action.payload.value
                 }
             }
+        case 'GET_SWITCH':
+            return state
+        case 'SET_SWITCH':
+            return state
     }
 
     return state
 }
 
 export const switchOn = id => ({
-    type: SWITCH_ON,
+    type: 'SET_SWITCH',
     payload: {
-        id
+        id,
+        value: true
     }
 })
 
 export const switchOff = id => ({
-    type: SWITCH_OFF,
+    type: 'SET_SWITCH',
     payload: {
-        id
+        id,
+        value: false
     }
 })
 
 
 function* sendRequest(action) {
-    const message = new Message(JSON.stringify({ 'id': action.payload.id, 'event': 'SWITCH_ON' }))
-    message.destinationName = 'devices/power'
+    const payload = {
+        id: action.payload.id,
+        action: 'SET',
+        value: action.payload.value
+    }
+
+    const message = new Message(JSON.stringify(payload))
+    message.destinationName = 'devices/switches'
     client.send(message)
 }
 
 export function* saga() {
-    yield takeEvery(SWITCH_ON, sendRequest)
-    yield takeEvery(SWITCH_OFF, sendRequest)
+    yield takeEvery('SET_SWITCH', sendRequest)
 }

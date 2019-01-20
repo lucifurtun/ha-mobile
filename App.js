@@ -1,20 +1,21 @@
 import React from 'react'
-import {Provider} from 'react-redux'
-import {ApolloProvider} from 'react-apollo'
+import { Provider } from 'react-redux'
+import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-client'
-import {HttpLink} from 'apollo-link-http'
-import {InMemoryCache} from 'apollo-cache-inmemory'
+import { HttpLink, createHttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
-import {createDrawerNavigator, createStackNavigator, createSwitchNavigator} from 'react-navigation'
-import {PersistGate} from 'redux-persist/integration/react'
+import { createDrawerNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import Devices from './src/screens/Devices'
 import Locations from './src/screens/Locations'
 import SideMenu from './src/components/SideMenu'
-import {persistor, store} from './src/store'
-import {client, runMQTT} from './src/mqtt'
+import { persistor, store } from './src/store'
+import { client, runMQTT } from './src/mqtt'
 import MenuButton from './src/components/MenuButton'
-import {SWITCHED_OFF, SWITCHED_ON} from './src/reducers/devices'
+import { SWITCHED_OFF, SWITCHED_ON } from './src/reducers/devices'
+import { API_URL } from './src/settings'
 
 
 console.disableYellowBox = true
@@ -23,14 +24,14 @@ console.disableYellowBox = true
 const HaNavigator = createStackNavigator({
     devices: {
         screen: Devices,
-        navigationOptions: ({navigation}) => ({
+        navigationOptions: ({ navigation }) => ({
             title: 'Devices',
             headerLeft: <MenuButton callback={navigation.toggleDrawer}/>
         })
     },
     locations: {
         screen: Locations,
-        navigationOptions: ({navigation}) => ({
+        navigationOptions: ({ navigation }) => ({
             title: 'Locations',
             headerLeft: <MenuButton callback={navigation.toggleDrawer}/>
         })
@@ -60,20 +61,30 @@ store.subscribe(() => {
  Workaround to fix circular imports when importing "store".
  */
 client.on('messageReceived', (message) => {
-    const data = JSON.parse(message.payloadString)
-    console.log(data)
 
+    const data = JSON.parse(message.payloadString)
+    if (message.destinationName === 'devices/sensors/temperature') {
+        store.dispatch({ type: 'STATUS_TEMPERATURE', payload: data })
+    }
+
+    if (message.destinationName === 'devices/switches') {
+        if(data.action === 'STATUS') {
+            store.dispatch({ type: 'STATUS_SWITCH', payload: data })
+        }
+    }
+
+    // console.log(data)
     if (data.event === SWITCHED_ON) {
-        store.dispatch({type: SWITCHED_ON, payload: {id: data.id}})
+        store.dispatch({ type: SWITCHED_ON, payload: { id: data.id } })
     }
 
     if (data.event === SWITCHED_OFF) {
-        store.dispatch({type: SWITCHED_OFF, payload: {id: data.id}})
+        store.dispatch({ type: SWITCHED_OFF, payload: { id: data.id } })
     }
 })
 
 const APIClient = new ApolloClient({
-    link: new HttpLink({uri: 'http://127.0.0.1:8000/graphql/'}),
+    link: new HttpLink({ uri: API_URL }),
     cache: new InMemoryCache(),
 })
 
@@ -86,11 +97,11 @@ export default class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <ApolloProvider client={APIClient}>
-                        <AppNavigator/>
-                    </ApolloProvider>
-                </PersistGate>
+                {/*<PersistGate loading={null} persistor={persistor}>*/}
+                <ApolloProvider client={APIClient}>
+                    <AppNavigator/>
+                </ApolloProvider>
+                {/*</PersistGate>*/}
             </Provider>
         )
     }
