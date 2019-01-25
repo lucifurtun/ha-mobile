@@ -16,6 +16,7 @@ import { client, runMQTT } from './src/mqtt'
 import MenuButton from './src/components/MenuButton'
 import { SWITCHED_OFF, SWITCHED_ON } from './src/reducers/devices'
 import { API_URL } from './src/settings'
+import { AppState } from 'react-native'
 
 
 console.disableYellowBox = true
@@ -68,7 +69,7 @@ client.on('messageReceived', (message) => {
     }
 
     if (message.destinationName === 'devices/switches') {
-        if(data.action === 'STATUS') {
+        if (data.action === 'STATUS') {
             store.dispatch({ type: 'STATUS_SWITCH', payload: data })
         }
     }
@@ -90,8 +91,30 @@ const APIClient = new ApolloClient({
 
 
 export default class App extends React.Component {
+    state = {
+        appState: AppState.currentState
+    }
+
     componentDidMount() {
         runMQTT()
+        AppState.addEventListener('change', this._handleAppStateChange)
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange)
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        const appBecameActive = this.state.appState.match(/inactive|background/) && (nextAppState === 'active')
+
+        if (appBecameActive) {
+            console.log('App is active now!')
+            if (!client.isConnected()) {
+                runMQTT()
+            }
+        }
+
+        this.setState({ appState: nextAppState })
     }
 
     render() {
