@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, Switch, FlatList } from 'react-native'
 import { connect } from 'react-redux'
-import { switchOn, switchOff } from '../reducers/devices'
+import { switchOn, switchOff, DEVICE_TYPENAMES } from '../reducers/devices'
 import { graphql } from 'react-apollo'
 import { gql } from 'apollo-boost'
 import { has, isUndefined } from 'lodash'
@@ -31,7 +31,7 @@ class Devices extends React.Component {
                             <View style={styles.listItem}>
                                 <Text style={{ marginRight: 10 }}>{item.display}</Text>
                                 {
-                                    item.access === 'SWITCH' &&
+                                    item.__typename === DEVICE_TYPENAMES.SWITCH &&
                                     !isUndefined(this.props.devices[item.id]) &&
                                     <View style={{
                                         flexDirection: 'row',
@@ -49,12 +49,11 @@ class Devices extends React.Component {
                                             }}
                                             value={this.props.devices[item.id].value}
                                             size={30}
-                                            disabled={item.access === 'SENSOR'}
                                         />
                                     </View>
                                 }
                                 {
-                                    item.access === 'SENSOR' &&
+                                    item.__typename === DEVICE_TYPENAMES.SENSOR &&
                                     !isUndefined(this.props.devices[item.id]) &&
                                     <TempHum
                                         temperature={this.props.devices[item.id].value.t}
@@ -113,16 +112,21 @@ function mapDispatchToProps(dispatch) {
 
 const dataQuery = graphql(gql`
 query{
-  devices {
-    id
-    display
-    serialNumber
-    type
-    access
-    location {
-      name
+    devices {
+        __typename
+        ... on Sensor {
+          id
+          name
+          display
+          type
+        }
+        ... on Switch{
+          id
+          name
+          display
+          type
+        }
     }
-  }
 }
 `)
 

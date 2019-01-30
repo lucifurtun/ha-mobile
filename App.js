@@ -3,7 +3,8 @@ import { Provider } from 'react-redux'
 import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import { HttpLink, createHttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'
+import introspectionQueryResultData from './fragmentTypes.json'
 
 import { createDrawerNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -14,7 +15,6 @@ import SideMenu from './src/components/SideMenu'
 import { persistor, store } from './src/store'
 import { client, runMQTT } from './src/mqtt'
 import MenuButton from './src/components/MenuButton'
-import { SWITCHED_OFF, SWITCHED_ON } from './src/reducers/devices'
 import { API_URL } from './src/settings'
 import { AppState } from 'react-native'
 
@@ -73,20 +73,16 @@ client.on('messageReceived', (message) => {
             store.dispatch({ type: 'STATUS_SWITCH', payload: data })
         }
     }
-
-    // console.log(data)
-    if (data.event === SWITCHED_ON) {
-        store.dispatch({ type: SWITCHED_ON, payload: { id: data.id } })
-    }
-
-    if (data.event === SWITCHED_OFF) {
-        store.dispatch({ type: SWITCHED_OFF, payload: { id: data.id } })
-    }
 })
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+    introspectionQueryResultData
+})
+
 
 const APIClient = new ApolloClient({
     link: new HttpLink({ uri: API_URL }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({ fragmentMatcher }),
 })
 
 

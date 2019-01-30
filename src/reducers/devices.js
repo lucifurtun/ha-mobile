@@ -2,11 +2,11 @@ import { takeEvery } from 'redux-saga/effects'
 import { client } from '../mqtt'
 import { Message } from 'react-native-paho-mqtt'
 
-export const SWITCH_ON = 'SWITCH_ON'
-export const SWITCHED_ON = 'SWITCHED_ON'
+export const DEVICE_TYPENAMES = {
+    SENSOR: 'Sensor',
+    SWITCH: 'Switch'
+}
 
-export const SWITCH_OFF = 'SWITCH_OFF'
-export const SWITCHED_OFF = 'SWITCHED_OFF'
 
 export const devicesReducer = (state = {}, action, rootState) => {
     switch(action.type) {
@@ -14,15 +14,15 @@ export const devicesReducer = (state = {}, action, rootState) => {
             let initialState = {}
 
             for (let device of action.payload) {
-                switch(device.access) {
-                    case 'SENSOR':
-                        if (device.type === 'TEMPERATURE') {
+                switch(device.__typename) {
+                    case DEVICE_TYPENAMES.SENSOR:
+                        if (device.type === 'temperature') {
                             initialState[device.id] = {
                                 value: { t: 0, h: 0 }
                             }
                         }
                         break
-                    case 'SWITCH':
+                    case DEVICE_TYPENAMES.SWITCH:
                         initialState[device.id] = {
                             value: false
                         }

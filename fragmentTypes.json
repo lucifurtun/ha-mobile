@@ -1,0 +1,30 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "DeviceUnion",
+        "possibleTypes": [
+          {
+            "name": "Sensor"
+          },
+          {
+            "name": "Switch"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Device",
+        "possibleTypes": [
+          {
+            "name": "Sensor"
+          },
+          {
+            "name": "Switch"
+          }
+        ]
+      }
+    ]
+  }
+}
