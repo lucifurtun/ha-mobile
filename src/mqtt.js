@@ -1,6 +1,7 @@
 import { Client, Message } from 'react-native-paho-mqtt'
 import { SWITCHED_OFF, SWITCHED_ON } from './reducers/devices'
 import { MQTT_URL } from './settings'
+import { random } from 'lodash'
 // import { store } from './store'
 
 const myStorage = {
@@ -13,7 +14,8 @@ const myStorage = {
     }
 }
 
-const client = new Client({ uri: MQTT_URL, clientId: 'clientId', storage: myStorage })
+const clientId = random(1, 10000000)
+const client = new Client({ uri: MQTT_URL, clientId: clientId.toString(), storage: myStorage })
 
 client.on('connectionLost', (responseObject) => {
     if (responseObject.errorCode !== 0) {
@@ -41,4 +43,4 @@ const runMQTT = () => {
         })
 }
 
-export {client, runMQTT}
+export { client, runMQTT }
